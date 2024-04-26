@@ -84,8 +84,8 @@ class DBStorage:
 
     def count(self, cls=None):
         """method to count the number of objects in storage"""
-        if cls is not  None:
+        if cls is None:
             return len(list(self.all()))
         else:
-            return len(list(self.all()))
+            return len(list(self.all(cls)))
 

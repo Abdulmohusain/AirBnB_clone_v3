@@ -2,9 +2,10 @@
 """
 creating flask routes
 """
-from flask import jsonify
 from api.v1.views import app_views
+from flask import jsonify
 from models import storage
+
 
 @app_views.route('/status')
 def api_status():
@@ -13,6 +14,7 @@ def api_status():
     """
     response = {'status': 'OK'}
     return jsonify(response)
+
 
 @app_views.route('/stats')
 def get_stats():

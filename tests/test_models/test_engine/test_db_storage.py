@@ -68,21 +68,118 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestFileStorage(unittest.TestCase):
-    """Test the FileStorage class"""
+class TestDBStorage(unittest.TestCase):
+    """Test the DBStorage class"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
-        self.assertIs(type(models.storage.all()), dict)
+        state = State()
+        state.name = "Lagos"
+        models.storage.new(state)
+        models.storage.save()
+        self.assertEqual(type(models.storage.all(State)), dict)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_no_class(self):
         """Test that all returns all rows when no class is passed"""
+        user = User()
+        user.email = "abd@gmail.com"
+        user.password = "qwerty"
+        user.first_name = "julien"
+        user.last_name = "Berber"
+        models.storage.new(user)
+        models.storage.save()
+        self.assertEqual(len(models.storage.all()), 1)
+
+        user2 = User()
+        user2.email = "abd@gmail.com"
+        user2.password = "qwerty"
+        user2.first_name = "julien"
+        user2.last_name = "Berber"
+        models.storage.new(user2)
+        models.storage.save()
+        self.assertEqual(len(models.storage.all()), 2)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
         """test that new adds an object to the database"""
+        user2 = User()
+        user2.email = "abd@gmail.com"
+        user2.password = "qwerty"
+        user2.first_name = "julien"
+        user2.last_name = "Berber"
+        models.storage.new(user2)
+        self.assertTrue(user2 in models.storage.all().values())
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+        state = State()
+        state.name = "Lagos"
+        models.storage.new(state)
+        models.storage.save()
+        self.assertTrue(state in models.storage.all(State).values())
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """Test that retrieve one object:"""
+        # Instance creation
+        user = User()
+        user_id = user.id
+        user.email = "abd@gmail.com"
+        user.password = "qwerty"
+        user.first_name = "julien"
+        user.last_name = "Berber"
+        models.storage.new(user)
+
+        user2 = User()
+        user2.email = "abd@gmail.com"
+        user2.password = "qwerty"
+        user2.first_name = "julien"
+        user2.last_name = "Berber"
+        models.storage.new(user2)
+
+        state = State()
+        state.name = "Lagos"
+        state_id = state.id
+        models.storage.new(state)
+
+        # save all models
+        self.assertEqual(models.storage.get(User, user_id), user)
+        self.assertNotEqual(models.storage.get(User, user_id), state)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        """method to count the number of objects in storage:"""
+        user = User()
+        user_id = user.id
+        user.email = "abd@gmail.com"
+        user.password = "qwerty"
+        user.first_name = "julien"
+        user.last_name = "Berber"
+        models.storage.new(user)
+
+        user2 = User()
+        user2.email = "abd@gmail.com"
+        user2.password = "qwerty"
+        user2.first_name = "julien"
+        user2.last_name = "Berber"
+        models.storage.new(user2)
+
+        state = State()
+        state.name = "Lagos"
+        state_id = state.id
+        models.storage.new(state)
+
+        # save all models
+        models.storage.save()
+
+        self.assertEqual(models.storage.count(), len(models.storage.all()))
+        self.assertEqual(
+            models.storage.count(State),
+            len(models.storage.all(State))
+        )
+        self.assertEqual(
+            models.storage.count(User),
+            len(models.storage.all(User))
+        )

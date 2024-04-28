@@ -7,7 +7,7 @@ from flask import jsonify
 from models import storage
 
 
-@app_views.route('/api/v1/status')
+@app_views.route('/status')
 def api_status():
     """
     Status route

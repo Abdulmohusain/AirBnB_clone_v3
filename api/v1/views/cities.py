@@ -70,8 +70,7 @@ def create_city(state_id):
 
     if 'name' not in kwargs:
         abort(400, 'Missing name')
-
-    setattr(kwargs, "state_id", state_id)
+    kwargs["state_id"] = state_id
     city = City(**kwargs)
     city.save()
     return jsonify(city.to_dict()), 201

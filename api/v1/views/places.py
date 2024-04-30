@@ -11,7 +11,7 @@ from models import storage
 
 
 @app_views.route('/cities/<city_id>/places', strict_slashes=False)
-def get_place(city_id):
+def get_places(city_id):
     """
     Retrieves the list of all Place objects of a City
     """
